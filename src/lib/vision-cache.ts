@@ -6,11 +6,11 @@ export function checkVisionCooldown(): { canUse: boolean; remainingMinutes: numb
 
   const lastTime = parseInt(lastUsed, 10);
   const now = Date.now();
-  const twoHoursMs = 2 * 60 * 60 * 1000;
+  const fiveMinutesMs = 5 * 60 * 1000;
   
   const diff = now - lastTime;
-  if (diff < twoHoursMs) {
-    const remaining = Math.ceil((twoHoursMs - diff) / (60 * 1000));
+  if (diff < fiveMinutesMs) {
+    const remaining = Math.ceil((fiveMinutesMs - diff) / (60 * 1000));
     return { canUse: false, remainingMinutes: remaining };
   }
   
