@@ -47,11 +47,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         }}
       >
         <div
-          className="pb-safe"
+          className="pb-safe px-4 py-6 md:px-10 md:py-8 lg:px-16 lg:py-12"
           style={{
             flex: 1,
             overflowY: "auto",
-            padding: "32px 32px 32px",
           }}
         >
           {children}

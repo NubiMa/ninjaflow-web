@@ -82,6 +82,12 @@ export async function deleteTransaction(id: string): Promise<void> {
   await deleteDoc(doc(db, "transactions", id));
 }
 
+export async function updateTransaction(id: string, data: Partial<TransactionDraft>): Promise<void> {
+  const updateData: any = { ...data };
+  if (data.date) updateData.date = Timestamp.fromDate(data.date);
+  await updateDoc(doc(db, "transactions", id), updateData);
+}
+
 // ─── Goals ───────────────────────────────────────────────────────────────────
 
 export function subscribeToGoals(

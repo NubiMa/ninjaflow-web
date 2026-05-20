@@ -135,23 +135,23 @@ export default function InsightsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 1600, width: "100%", margin: "0 auto" }}>
+    <div style={{ maxWidth: 960, width: "100%", margin: "0 auto", padding: 20 }}>
       <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         style={{ fontSize: 24, fontWeight: 700, color: "#F5F7FA", letterSpacing: "-0.02em", marginBottom: 28 }}>
         Insights
       </motion.h1>
 
       {/* Stats row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 24 }}>
+      <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 4, marginBottom: 24, scrollbarWidth: "none" }}>
         {[
           { label: "Pengeluaran", value: formatCurrency(totalExpense), color: "#E88989" },
           { label: "Pemasukan",   value: formatCurrency(totalIncome),  color: "#6EE7B7" },
           { label: "Saving Rate", value: `${savingsRate}%`,            color: "#4FD1C5" },
         ].map(({ label, value, color }, i) => (
           <motion.div key={label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05, duration: 0.35 }}
-            style={{ padding: "18px 20px", borderRadius: 18, background: "#152129", border: "1px solid rgba(255,255,255,0.06)" }}>
+            style={{ flexShrink: 0, minWidth: 140, padding: "18px 20px", borderRadius: 18, background: "#152129", border: "1px solid rgba(255,255,255,0.06)" }}>
             <p style={{ fontSize: 11, color: "#748391", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>{label}</p>
-            <p style={{ fontSize: 22, fontWeight: 700, color }}>{loading ? "—" : value}</p>
+            <p style={{ fontSize: 16, fontWeight: 700, color, overflowWrap: "anywhere" }}>{loading ? "—" : value}</p>
           </motion.div>
         ))}
       </div>
@@ -162,7 +162,7 @@ export default function InsightsPage() {
         
         {/* 3 Summary Cards */}
         {!loadingAi && aiResult && aiResult.cards && aiResult.cards.length > 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginTop: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 12, marginTop: 16 }}>
             {aiResult.cards.map((card, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.1 }}
                 style={{ background: "#152129", borderRadius: 16, padding: "16px", border: "1px solid rgba(255,255,255,0.06)", flex: 1 }}>
@@ -178,7 +178,7 @@ export default function InsightsPage() {
       </div>
 
       {/* Main content grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
         {/* Weekly Bar Chart */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }}
           style={{ padding: "20px", borderRadius: 20, background: "#152129", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -221,7 +221,7 @@ export default function InsightsPage() {
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <span style={{ fontSize: 12, color: "#748391" }}>{pct}%</span>
-                        <span style={{ fontSize: 12.5, fontWeight: 600, color: "#F5F7FA" }}>{formatCurrency(amount)}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#F5F7FA", overflowWrap: "anywhere" }}>{formatCurrency(amount)}</span>
                       </div>
                     </div>
                     <div style={{ height: 4, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>

@@ -77,12 +77,27 @@ export const CATEGORY_META: Record<
 // Rule-based categorization (reduces AI token usage)
 export function categorizeByMerchant(merchant: string): TransactionCategory {
   const lower = merchant.toLowerCase();
-  if (/mcdonald|kfc|burger|pizza|sushi|warung|resto|cafe|coffee|starbucks|grab.?food|gofood|shopee.?food/.test(lower)) return "food";
-  if (/gojek|grab|ojol|transjakarta|commuter|kereta|bus|taxi|uber|bluebird/.test(lower)) return "transport";
-  if (/shopee|tokopedia|lazada|blibli|zalora|h&m|zara|indomaret|alfamart/.test(lower)) return "shopping";
-  if (/netflix|spotify|steam|disney|youtube|cinema|bioskop/.test(lower)) return "entertainment";
-  if (/apotek|klinik|rumah sakit|hospital|dokter|bpjs/.test(lower)) return "health";
-  if (/coursera|udemy|skillshare|kampus|sekolah|les/.test(lower)) return "education";
-  if (/pln|pdam|telkom|indihome|internet|listrik|air/.test(lower)) return "bills";
+  
+  // Food & Beverage
+  if (/mcdonald|kfc|burger|pizza|sushi|warung|resto|cafe|coffee|starbucks|grab.?food|gofood|shopee.?food|kopi|teh|hokben|solaria|kfc|chatime|mixue|jco|breadtalk|roti/.test(lower)) return "food";
+  
+  // Transport
+  if (/gojek|grab|ojol|transjakarta|commuter|kereta|bus|taxi|uber|bluebird|parkir|bensin|spbu|shell|pertamina|tol|maxim|inDrive/.test(lower)) return "transport";
+  
+  // Shopping & Groceries
+  if (/shopee|tokopedia|lazada|blibli|zalora|h&m|zara|indomaret|alfamart|superindo|hypermart|transmart|alfamidi|ikea|miniso|uniqlo|matahari/.test(lower)) return "shopping";
+  
+  // Entertainment
+  if (/netflix|spotify|steam|disney|youtube|cinema|bioskop|xxi|cgv|spotify|apple music|playstation|nintendo|vidio/.test(lower)) return "entertainment";
+  
+  // Health
+  if (/apotek|klinik|rumah sakit|hospital|dokter|bpjs|kimia farma|k24|halodoc|alodokter|vitamin|obat/.test(lower)) return "health";
+  
+  // Education
+  if (/coursera|udemy|skillshare|kampus|sekolah|les|ruangguru|zenius|gramedia|buku|spp/.test(lower)) return "education";
+  
+  // Bills & Utilities
+  if (/pln|pdam|telkom|indihome|internet|listrik|air|pulsa|paket data|telkomsel|indosat|xl|tri|smartfren|tagihan|pajak/.test(lower)) return "bills";
+  
   return "other";
 }

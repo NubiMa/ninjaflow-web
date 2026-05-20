@@ -83,14 +83,14 @@ export function StatCard({ label, value, sub, trend, accent = "#4FD1C5", index =
         {label}
       </span>
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <span style={{ fontSize: 22, fontWeight: 700, color: accent, letterSpacing: "-0.02em" }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: accent, letterSpacing: "-0.02em", overflowWrap: "anywhere", lineHeight: 1.2 }}>
           {value}
         </span>
         {trend === "up" && <TrendingUp size={14} color="#6EE7B7" strokeWidth={2} />}
         {trend === "down" && <TrendingDown size={14} color="#E88989" strokeWidth={2} />}
       </div>
       {sub && (
-        <span style={{ fontSize: 11.5, color: "#748391" }}>{sub}</span>
+        <span style={{ fontSize: 11, color: "#748391" }}>{sub}</span>
       )}
     </motion.div>
   );

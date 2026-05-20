@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Plus, X, Camera, Image as ImageIcon, Edit3, Zap } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
-import { subscribeToTransactions, addTransaction, deleteTransaction } from "@/lib/db";
+import { subscribeToTransactions, addTransaction, deleteTransaction, updateTransaction } from "@/lib/db";
 import TransactionItem from "@/components/TransactionItem";
 import { Transaction, TransactionCategory, TransactionDraft, CATEGORY_META } from "@/types";
 import { formatCurrency } from "@/lib/utils";
@@ -17,12 +17,26 @@ import { checkVisionCooldown, setVisionUsed } from "@/lib/vision-cache";
 
 const CATEGORY_KEYS = Object.keys(CATEGORY_META) as TransactionCategory[];
 
-function ManualAddSheet({ isOpen, onClose, userId }: { isOpen: boolean; onClose: () => void; userId: string }) {
+function TransactionFormSheet({ isOpen, onClose, userId, transactionToEdit, onDelete }: { isOpen: boolean; onClose: () => void; userId: string; transactionToEdit?: Transaction | null; onDelete?: (id: string) => void; }) {
   const [type, setType]         = useState<"expense" | "income">("expense");
   const [amount, setAmount]     = useState("");
   const [category, setCategory] = useState<TransactionCategory>("food");
   const [note, setNote]         = useState("");
   const [saving, setSaving]     = useState(false);
+
+  useEffect(() => {
+    if (transactionToEdit && isOpen) {
+      setType(transactionToEdit.type);
+      setAmount(transactionToEdit.amount.toString());
+      setCategory(transactionToEdit.category);
+      setNote(transactionToEdit.note || transactionToEdit.merchant || "");
+    } else if (isOpen) {
+      setType("expense");
+      setAmount("");
+      setCategory("food");
+      setNote("");
+    }
+  }, [transactionToEdit, isOpen]);
 
   const handleSave = async () => {
     if (!amount || isNaN(Number(amount))) return;
@@ -32,13 +46,24 @@ function ManualAddSheet({ isOpen, onClose, userId }: { isOpen: boolean; onClose:
         type, category,
         amount: Number(amount),
         note,
-        date: new Date(),
+        date: transactionToEdit ? transactionToEdit.date : new Date(),
       };
-      await addTransaction(userId, draft);
-      setAmount(""); setNote(""); setCategory("food");
+      if (transactionToEdit) {
+        await updateTransaction(transactionToEdit.id, draft);
+      } else {
+        await addTransaction(userId, draft);
+      }
       onClose();
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!transactionToEdit || !onDelete) return;
+    if (confirm("Apakah kamu yakin ingin menghapus transaksi ini?")) {
+      await onDelete(transactionToEdit.id);
+      onClose();
     }
   };
 
@@ -62,7 +87,7 @@ function ManualAddSheet({ isOpen, onClose, userId }: { isOpen: boolean; onClose:
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: "#F5F7FA" }}>Tambah Transaksi</h2>
+              <h2 style={{ fontSize: 17, fontWeight: 700, color: "#F5F7FA" }}>{transactionToEdit ? "Edit Transaksi" : "Tambah Transaksi"}</h2>
               <button onClick={onClose} style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer" }}>
                 <X size={16} color="#AAB7C2" />
               </button>
@@ -101,7 +126,7 @@ function ManualAddSheet({ isOpen, onClose, userId }: { isOpen: boolean; onClose:
             {/* Category */}
             <div style={{ marginBottom: 24 }}>
               <label style={{ display: "block", fontSize: 12, color: "#748391", marginBottom: 10, fontWeight: 500 }}>Kategori</label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: 8 }}>
                 {CATEGORY_KEYS.map((cat) => {
                   const m = CATEGORY_META[cat];
                   return (
@@ -113,21 +138,33 @@ function ManualAddSheet({ isOpen, onClose, userId }: { isOpen: boolean; onClose:
                         transition: "all 0.15s ease",
                       }}>
                       <span style={{ fontSize: 20 }}>{m.emoji}</span>
-                      <span style={{ fontSize: 10, color: category === cat ? m.color : "#748391", fontWeight: 500 }}>{m.label}</span>
+                      <span style={{ fontSize: 10, color: category === cat ? m.color : "#748391", fontWeight: 500, textAlign: "center", wordBreak: "break-word" }}>{m.label}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            <button onClick={handleSave} disabled={saving || !amount}
-              style={{
-                width: "100%", padding: "14px", borderRadius: 14, border: "none", cursor: "pointer",
-                background: saving || !amount ? "rgba(79,209,197,0.3)" : "#4FD1C5",
-                color: "#0B1215", fontWeight: 700, fontSize: 15, transition: "all 0.2s ease",
-              }}>
-              {saving ? "Menyimpan..." : "Simpan Transaksi"}
-            </button>
+            <div style={{ display: "flex", gap: 12 }}>
+              {transactionToEdit && (
+                <button onClick={handleDelete} disabled={saving}
+                  style={{
+                    padding: "14px", borderRadius: 14, border: "none", cursor: "pointer",
+                    background: "rgba(232,137,137,0.15)", color: "#E88989", fontWeight: 700, fontSize: 15, transition: "all 0.2s ease",
+                    display: "flex", alignItems: "center", justifyContent: "center"
+                  }}>
+                  Hapus
+                </button>
+              )}
+              <button onClick={handleSave} disabled={saving || !amount}
+                style={{
+                  flex: 1, padding: "14px", borderRadius: 14, border: "none", cursor: "pointer",
+                  background: saving || !amount ? "rgba(79,209,197,0.3)" : "#4FD1C5",
+                  color: "#0B1215", fontWeight: 700, fontSize: 15, transition: "all 0.2s ease",
+                }}>
+                {saving ? "Menyimpan..." : "Simpan Transaksi"}
+              </button>
+            </div>
           </motion.div>
         </>
       )}
@@ -187,9 +224,11 @@ export default function TransactionsPage() {
   const [error, setError]               = useState<string | null>(null);
   const [search, setSearch]             = useState("");
   const [activeFilter, setActiveFilter] = useState<TransactionCategory | "all">("all");
+  const [dateFilter, setDateFilter]     = useState<"all" | "this_month" | "last_month">("all");
   
   const [showAddMenu, setShowAddMenu]       = useState(false);
-  const [showManual, setShowManual]         = useState(false);
+  const [showForm, setShowForm]             = useState(false);
+  const [editingTx, setEditingTx]           = useState<Transaction | null>(null);
   const [showCamera, setShowCamera]         = useState(false);
   const [showScanResult, setShowScanResult] = useState(false);
   
@@ -212,12 +251,30 @@ export default function TransactionsPage() {
   }, [user]);
 
   const filtered = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
     return transactions.filter((t) => {
+      // 1. Search text
       const matchSearch = !search || t.note.toLowerCase().includes(search.toLowerCase()) || (t.merchant ?? "").toLowerCase().includes(search.toLowerCase());
-      const matchFilter = activeFilter === "all" || t.category === activeFilter;
-      return matchSearch && matchFilter;
+      
+      // 2. Category
+      const matchCategory = activeFilter === "all" || t.category === activeFilter;
+      
+      // 3. Date Range
+      let matchDate = true;
+      if (dateFilter === "this_month") {
+        matchDate = t.date.getMonth() === currentMonth && t.date.getFullYear() === currentYear;
+      } else if (dateFilter === "last_month") {
+        const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+        const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+        matchDate = t.date.getMonth() === lastMonth && t.date.getFullYear() === lastMonthYear;
+      }
+      
+      return matchSearch && matchCategory && matchDate;
     });
-  }, [transactions, search, activeFilter]);
+  }, [transactions, search, activeFilter, dateFilter]);
 
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
   const totalIncome  = transactions.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
@@ -286,15 +343,15 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 1600, width: "100%", margin: "0 auto" }}>
+    <div style={{ maxWidth: 960, width: "100%", margin: "0 auto", padding: 20 }}>
       
       {/* File input (Hidden) */}
       <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileUpload} style={{ display: "none" }} />
       
       {/* Sheets */}
-      {user && <ManualAddSheet isOpen={showManual} onClose={() => setShowManual(false)} userId={user.uid} />}
+      {user && <TransactionFormSheet isOpen={showForm} onClose={() => { setShowForm(false); setEditingTx(null); }} userId={user.uid} transactionToEdit={editingTx} onDelete={deleteTransaction} />}
       <AddMenuSheet isOpen={showAddMenu} onClose={() => setShowAddMenu(false)} 
-        onManual={() => { setShowAddMenu(false); setShowManual(true); }} 
+        onManual={() => { setShowAddMenu(false); setShowForm(true); setEditingTx(null); }} 
         onPhoto={() => checkCooldownAndOpen("photo")} 
         onCamera={() => checkCooldownAndOpen("camera")} 
       />
@@ -347,11 +404,11 @@ export default function TransactionsPage() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
         <div style={{ padding: "16px 18px", borderRadius: 16, background: "rgba(110,231,183,0.06)", border: "1px solid rgba(110,231,183,0.12)" }}>
           <p style={{ fontSize: 11, color: "#748391", marginBottom: 4 }}>Total Pemasukan</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#6EE7B7" }}>{formatCurrency(totalIncome)}</p>
+          <p style={{ fontSize: 16, fontWeight: 700, color: "#6EE7B7", overflowWrap: "anywhere" }}>{formatCurrency(totalIncome)}</p>
         </div>
         <div style={{ padding: "16px 18px", borderRadius: 16, background: "rgba(232,137,137,0.06)", border: "1px solid rgba(232,137,137,0.12)" }}>
           <p style={{ fontSize: 11, color: "#748391", marginBottom: 4 }}>Total Pengeluaran</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#E88989" }}>{formatCurrency(totalExpense)}</p>
+          <p style={{ fontSize: 16, fontWeight: 700, color: "#E88989", overflowWrap: "anywhere" }}>{formatCurrency(totalExpense)}</p>
         </div>
       </div>
 
@@ -362,11 +419,25 @@ export default function TransactionsPage() {
           className="input-field" style={{ paddingLeft: 40 }} />
       </div>
 
-      {/* Filter Chips */}
-      <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 20 }}>
+      {/* Filter Chips - Date */}
+      <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 12, scrollbarWidth: "none" }}>
+        {[
+          { id: "all", label: "Semua Waktu" },
+          { id: "this_month", label: "Bulan Ini" },
+          { id: "last_month", label: "Bulan Lalu" }
+        ].map(filter => (
+          <button key={filter.id} onClick={() => setDateFilter(filter.id as any)}
+            style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 99, fontSize: 12, fontWeight: 500, border: `1px solid ${dateFilter === filter.id ? "#4FD1C5" : "rgba(255,255,255,0.08)"}`, background: dateFilter === filter.id ? "rgba(79,209,197,0.12)" : "transparent", color: dateFilter === filter.id ? "#4FD1C5" : "#748391", cursor: "pointer" }}>
+            {filter.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Filter Chips - Category */}
+      <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 20, scrollbarWidth: "none" }}>
         <button onClick={() => setActiveFilter("all")}
           style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 99, fontSize: 12, fontWeight: 500, border: `1px solid ${activeFilter === "all" ? "#4FD1C5" : "rgba(255,255,255,0.08)"}`, background: activeFilter === "all" ? "rgba(79,209,197,0.12)" : "transparent", color: activeFilter === "all" ? "#4FD1C5" : "#748391", cursor: "pointer" }}>
-          Semua
+          Semua Kategori
         </button>
         {CATEGORY_KEYS.map((cat) => {
           const m = CATEGORY_META[cat];
@@ -394,7 +465,9 @@ export default function TransactionsPage() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {filtered.map((t, i) => (
-            <TransactionItem key={t.id} transaction={t} index={i} onDelete={deleteTransaction} />
+            <div key={t.id} onClick={() => { setEditingTx(t); setShowForm(true); }} style={{ cursor: "pointer" }}>
+              <TransactionItem transaction={t} index={i} />
+            </div>
           ))}
         </div>
       )}

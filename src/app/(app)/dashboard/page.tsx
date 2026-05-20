@@ -124,7 +124,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div style={{ maxWidth: 1600, width: "100%", margin: "0 auto" }}>
+    <div style={{ maxWidth: 960, width: "100%", margin: "0 auto", padding: 20 }}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -181,25 +181,25 @@ export default function DashboardPage() {
           marginBottom: 24,
         }}
       >
-        <div style={{ position: "absolute", top: -40, right: -40, width: 180, height: 180, borderRadius: "50%", background: "rgba(79,209,197,0.05)", filter: "blur(50px)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute",margin : 10, width: 180, height: 180, borderRadius: "50%", background: "rgba(79,209,197,0.05)", filter: "blur(50px)", pointerEvents: "none" }} />
         <p style={{ fontSize: 12, color: "#748391", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
           Saldo Bulan Ini
         </p>
         {loading ? (
           <div className="skeleton" style={{ height: 40, width: 200, borderRadius: 8, marginBottom: 8 }} />
         ) : (
-          <h2 style={{ fontSize: 36, fontWeight: 800, color: balance >= 0 ? "#4FD1C5" : "#E88989", letterSpacing: "-0.03em", marginBottom: 20 }}>
+          <h2 style={{ fontSize: 28, fontWeight: 800, color: balance >= 0 ? "#4FD1C5" : "#E88989", letterSpacing: "-0.03em", marginBottom: 20, overflowWrap: "anywhere" }}>
             {formatCurrency(balance)}
           </h2>
         )}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, maxWidth: 400 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 34, height: 34, borderRadius: 10, background: "rgba(110,231,183,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ArrowDownLeft size={16} color="#6EE7B7" strokeWidth={2} />
             </div>
             <div>
               <p style={{ fontSize: 11, color: "#748391" }}>Pemasukan</p>
-              <p style={{ fontSize: 15, fontWeight: 600, color: "#6EE7B7" }}>{loading ? "—" : formatCurrency(totalIncome)}</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#6EE7B7", overflowWrap: "anywhere" }}>{loading ? "—" : formatCurrency(totalIncome)}</p>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -208,17 +208,23 @@ export default function DashboardPage() {
             </div>
             <div>
               <p style={{ fontSize: 11, color: "#748391" }}>Pengeluaran</p>
-              <p style={{ fontSize: 15, fontWeight: 600, color: "#E88989" }}>{loading ? "—" : formatCurrency(totalExpense)}</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#E88989", overflowWrap: "anywhere" }}>{loading ? "—" : formatCurrency(totalExpense)}</p>
             </div>
           </div>
         </div>
       </motion.div>
 
       {/* Stats + AI Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 24 }}>
-        <StatCard label="Transaksi" value={loading ? "—" : `${thisMonth.length}x`} sub="Bulan ini" index={0} />
-        <StatCard label="Terbesar" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.max(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), 0)) : "—")} sub="Pengeluaran" accent="#E88989" index={1} />
-        <StatCard label="Terkecil" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), Infinity) === Infinity ? 0 : Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount))) : "—")} sub="Pengeluaran" accent="#F6C177" index={2} />
+      <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 4, marginBottom: 24, scrollbarWidth: "none" }}>
+        <div style={{ flexShrink: 0, minWidth: 140 }}>
+          <StatCard label="Transaksi" value={loading ? "—" : `${thisMonth.length}x`} sub="Bulan ini" index={0} />
+        </div>
+        <div style={{ flexShrink: 0, minWidth: 140 }}>
+          <StatCard label="Terbesar" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.max(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), 0)) : "—")} sub="Pengeluaran" accent="#E88989" index={1} />
+        </div>
+        <div style={{ flexShrink: 0, minWidth: 140 }}>
+          <StatCard label="Terkecil" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), Infinity) === Infinity ? 0 : Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount))) : "—")} sub="Pengeluaran" accent="#F6C177" index={2} />
+        </div>
       </div>
 
       {/* Main Grid */}

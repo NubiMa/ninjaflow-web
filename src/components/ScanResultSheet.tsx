@@ -124,7 +124,7 @@ export default function ScanResultSheet({ isOpen, result, onClose, onConfirm }: 
             {/* Category */}
             <div style={{ marginBottom: 24 }}>
               <label style={{ display: "block", fontSize: 12, color: "#748391", marginBottom: 10, fontWeight: 500 }}>Kategori</label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: 8 }}>
                 {CATEGORY_KEYS.map((cat) => {
                   const m = CATEGORY_META[cat];
                   const isActive = draft.category === cat;
@@ -137,7 +137,7 @@ export default function ScanResultSheet({ isOpen, result, onClose, onConfirm }: 
                         background: isActive ? m.bg : "rgba(255,255,255,0.02)", transition: "all 0.15s",
                       }}>
                       <span style={{ fontSize: 20 }}>{m.emoji}</span>
-                      <span style={{ fontSize: 10, color: isActive ? m.color : "#748391", fontWeight: 500 }}>{m.label}</span>
+                      <span style={{ fontSize: 10, color: draft.category === cat ? m.color : "#748391", fontWeight: 500, textAlign: "center", wordBreak: "break-word" }}>{m.label}</span>
                     </button>
                   );
                 })}

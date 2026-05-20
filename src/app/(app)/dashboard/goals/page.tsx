@@ -113,7 +113,7 @@ export default function GoalsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 1600, width: "100%", margin: "0 auto" }}>
+    <div style={{ maxWidth: 960, width: "100%", margin: "0 auto", padding: 20 }}>
       {user && <AddGoalSheet isOpen={showAdd} onClose={() => setShowAdd(false)} userId={user.uid} />}
 
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
@@ -132,7 +132,7 @@ export default function GoalsPage() {
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
             <div>
               <p style={{ fontSize: 12, color: "#748391", marginBottom: 4 }}>Total Progress</p>
-              <p style={{ fontSize: 20, fontWeight: 700, color: "#4FD1C5" }}>{formatCurrency(totalCurrent)} <span style={{ fontSize: 13, color: "#748391", fontWeight: 400 }}>/ {formatCurrency(totalTarget)}</span></p>
+              <p style={{ fontSize: 20, fontWeight: 700, color: "#4FD1C5", overflowWrap: "anywhere" }}>{formatCurrency(totalCurrent)} <span style={{ fontSize: 13, color: "#748391", fontWeight: 400 }}>/ {formatCurrency(totalTarget)}</span></p>
             </div>
             <p style={{ fontSize: 26, fontWeight: 800, color: "#F5F7FA" }}>{overallPct}%</p>
           </div>
@@ -172,14 +172,14 @@ export default function GoalsPage() {
                   </button>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                  <p style={{ fontSize: 13, color: "#748391" }}>{formatCurrency(goal.currentAmount)}</p>
+                  <p style={{ fontSize: 13, color: "#748391", overflowWrap: "anywhere" }}>{formatCurrency(goal.currentAmount)}</p>
                   <p style={{ fontSize: 13, fontWeight: 600, color: "#4FD1C5" }}>{pct}%</p>
                 </div>
                 <div style={{ height: 5, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden", marginBottom: 8 }}>
                   <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(pct, 100)}%` }} transition={{ delay: i * 0.06 + 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     style={{ height: "100%", borderRadius: 99, background: pct >= 100 ? "#6EE7B7" : "linear-gradient(90deg, #4FD1C5, #7DD3FC)" }} />
                 </div>
-                <p style={{ fontSize: 11, color: "#748391" }}>Target: {formatCurrency(goal.targetAmount)}</p>
+                <p style={{ fontSize: 11, color: "#748391", overflowWrap: "anywhere" }}>Target: {formatCurrency(goal.targetAmount)}</p>
               </motion.div>
             );
           })}

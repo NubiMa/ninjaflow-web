@@ -35,9 +35,9 @@ This document outlines the current progress of the application based on the requ
 ## ⏳ Features Not Yet Added (Pending)
 
 ### 1. Transaction Enhancements
-- [ ] **Edit & Delete:** Full CRUD capabilities for existing transactions.
-- [ ] **Advanced Filtering:** Sorting history by custom date ranges or categories.
-- [ ] **Rule-Based Categorization:** Hardcoded fallback rules (e.g., "Starbucks" -> "Makanan") to save AI tokens.
+- [x] **Edit & Delete:** Full CRUD capabilities for existing transactions.
+- [x] **Advanced Filtering:** Sorting history by custom date ranges or categories.
+- [x] **Rule-Based Categorization:** Hardcoded fallback rules (e.g., "Starbucks" -> "Makanan") to save AI tokens.
 
 ### 2. Profile & Settings
 - [ ] **Editable Profile:** Allowing users to change their display name, avatar, and base currency.

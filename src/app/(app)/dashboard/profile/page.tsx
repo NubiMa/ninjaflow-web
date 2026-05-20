@@ -38,7 +38,7 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div style={{ maxWidth: 700, width: "100%", margin: "0 auto" }}>
+    <div style={{ maxWidth: 700, width: "100%", margin: "0 auto", padding: 20}}>
       <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         style={{ fontSize: 24, fontWeight: 700, color: "#F5F7FA", letterSpacing: "-0.02em", marginBottom: 28 }}>
         Profil

@@ -50,7 +50,7 @@ export default function TransactionItem({ transaction, index = 0, onDelete }: Tr
 
       {/* Info */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: "#F5F7FA", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        <p style={{ fontSize: 13, fontWeight: 500, color: "#F5F7FA", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
           {transaction.note || transaction.merchant || meta.label}
         </p>
         <p style={{ fontSize: 11.5, color: "#748391", marginTop: 2 }}>
@@ -62,10 +62,14 @@ export default function TransactionItem({ transaction, index = 0, onDelete }: Tr
       <div style={{ textAlign: "right", flexShrink: 0 }}>
         <p
           style={{
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: 600,
             color: isExpense ? "#E88989" : "#6EE7B7",
             letterSpacing: "-0.01em",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: 120,
           }}
         >
           {isExpense ? "−" : "+"}{formatCurrency(transaction.amount)}
