@@ -1,0 +1,61 @@
+steps:
+  # Build the Docker image and pass all env vars as build args
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/ninja-finance:$COMMIT_SHA"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/ninja-finance:latest"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_API_KEY=${_NEXT_PUBLIC_FIREBASE_API_KEY}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_PROJECT_ID=${_NEXT_PUBLIC_FIREBASE_PROJECT_ID}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_FIREBASE_APP_ID=${_NEXT_PUBLIC_FIREBASE_APP_ID}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_ADMIN_EMAILS=${_NEXT_PUBLIC_ADMIN_EMAILS}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_GEMINI_VISION_API_KEY=${_NEXT_PUBLIC_GEMINI_VISION_API_KEY}"
+      - "."
+
+  # Push image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/ninja-finance:$COMMIT_SHA"]
+
+  # Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "ninja-finance"
+      - "--image=gcr.io/$PROJECT_ID/ninja-finance:$COMMIT_SHA"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--memory=512Mi"
+      - "--cpu=1"
+      - "--min-instances=0"
+      - "--max-instances=3"
+      - "--port=8080"
+
+images:
+  - "gcr.io/$PROJECT_ID/ninja-finance:$COMMIT_SHA"
+  - "gcr.io/$PROJECT_ID/ninja-finance:latest"
+
+substitutions:
+  _NEXT_PUBLIC_FIREBASE_API_KEY: ""
+  _NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ""
+  _NEXT_PUBLIC_FIREBASE_PROJECT_ID: ""
+  _NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ""
+  _NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ""
+  _NEXT_PUBLIC_FIREBASE_APP_ID: ""
+  _NEXT_PUBLIC_ADMIN_EMAILS: ""
+  _NEXT_PUBLIC_GEMINI_VISION_API_KEY: ""
