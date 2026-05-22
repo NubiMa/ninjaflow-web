@@ -43,7 +43,7 @@ steps:
       - "--min-instances=0"
       - "--max-instances=3"
       - "--port=8080"
-      - "--set-env-vars=GEMINI_API_KEY=${_GEMINI_API_KEY},VISION_AI_API_KEY=${_VISION_AI_API_KEY}"
+      - "--set-env-vars=GEMINI_API_KEY=${_GEMINI_API_KEY},VISION_AI_API_KEY=${_VISION_AI_API_KEY},GROQ_API_KEY=${_GROQ_API_KEY}"
 
 images:
   - "gcr.io/$PROJECT_ID/ninja-finance:$COMMIT_SHA"
@@ -62,3 +62,4 @@ substitutions:
   _NEXT_PUBLIC_ADMIN_EMAILS: ""
   _GEMINI_API_KEY: ""
   _VISION_AI_API_KEY: ""
+  _GROQ_API_KEY: ""
