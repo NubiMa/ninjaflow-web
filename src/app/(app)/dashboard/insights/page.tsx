@@ -149,7 +149,7 @@ export default function InsightsPage() {
           { label: "Saving Rate", value: `${savingsRate}%`,            color: "#4FD1C5" },
         ].map(({ label, value, color }, i) => (
           <motion.div key={label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05, duration: 0.35 }}
-            style={{ flexShrink: 0, minWidth: 140, padding: "18px 20px", borderRadius: 18, background: "#152129", border: "1px solid rgba(255,255,255,0.06)" }}>
+            style={{ flex: "1 0 140px", padding: "18px 20px", borderRadius: 18, background: "#152129", border: "1px solid rgba(255,255,255,0.06)" }}>
             <p style={{ fontSize: 11, color: "#748391", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>{label}</p>
             <p style={{ fontSize: 16, fontWeight: 700, color, overflowWrap: "anywhere" }}>{loading ? "—" : value}</p>
           </motion.div>

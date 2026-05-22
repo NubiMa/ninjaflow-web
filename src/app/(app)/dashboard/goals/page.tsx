@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Target, X, TrendingUp } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
-import { subscribeToGoals, addGoal, deleteGoal, updateGoalAmount } from "@/lib/db";
+import { subscribeToGoals, addGoal, deleteGoal, updateGoalAmount, addTransaction } from "@/lib/db";
 import { Goal } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 
@@ -32,9 +32,19 @@ function AddGoalSheet({ isOpen, onClose, userId }: { isOpen: boolean; onClose: (
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 40, backdropFilter: "blur(4px)" }} />
-          <motion.div initial={{ y: "100%", opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: "100%", opacity: 0 }}
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0, x: "-50%", y: "-50%" }}
+            animate={{ scale: 1, opacity: 1, x: "-50%", y: "-50%" }}
+            exit={{ scale: 0.95, opacity: 0, x: "-50%", y: "-50%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "#10181D", borderRadius: "24px 24px 0 0", border: "1px solid rgba(255,255,255,0.08)", padding: "24px 20px 40px" }}>
+            style={{
+              position: "fixed", top: "50%", left: "50%", zIndex: 50,
+              background: "#10181D", borderRadius: 24,
+              border: "1px solid rgba(255,255,255,0.08)",
+              padding: "24px 20px",
+              width: "90%", maxWidth: 420, maxHeight: "85vh", overflowY: "auto",
+            }}
+          >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
               <h2 style={{ fontSize: 17, fontWeight: 700, color: "#F5F7FA" }}>Tambah Goal</h2>
               <button onClick={onClose} style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer" }}><X size={16} color="#AAB7C2" /></button>
@@ -66,12 +76,83 @@ function AddGoalSheet({ isOpen, onClose, userId }: { isOpen: boolean; onClose: (
   );
 }
 
+function TopUpSheet({ goal, onClose, userId }: { goal: Goal | null; onClose: () => void; userId: string }) {
+  const [amount, setAmount] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    if (!goal || !amount) return;
+    setSaving(true);
+    try {
+      const added = Number(amount);
+      await updateGoalAmount(goal.id, goal.currentAmount + added);
+      
+      // Auto create transaction to deduct balance
+      await addTransaction(userId, {
+        type: "expense",
+        category: "investment",
+        amount: added,
+        date: new Date(),
+        note: "Top Up Goal: " + goal.title,
+        merchant: "Ninja Goals",
+      });
+
+      setAmount("");
+      onClose();
+    } finally { setSaving(false); }
+  };
+
+  return (
+    <AnimatePresence>
+      {goal && (
+        <>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 40, backdropFilter: "blur(4px)" }} />
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0, x: "-50%", y: "-50%" }}
+            animate={{ scale: 1, opacity: 1, x: "-50%", y: "-50%" }}
+            exit={{ scale: 0.95, opacity: 0, x: "-50%", y: "-50%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            style={{
+              position: "fixed", top: "50%", left: "50%", zIndex: 50,
+              background: "#10181D", borderRadius: 24,
+              border: "1px solid rgba(255,255,255,0.08)",
+              padding: "24px 20px",
+              width: "90%", maxWidth: 420, maxHeight: "85vh", overflowY: "auto",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+              <h2 style={{ fontSize: 17, fontWeight: 700, color: "#F5F7FA" }}>Top Up Goal</h2>
+              <button onClick={onClose} style={{ background: "rgba(255,255,255,0.06)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer" }}><X size={16} color="#AAB7C2" /></button>
+            </div>
+            
+            <div style={{ marginBottom: 24, textAlign: "center" }}>
+               <span style={{ fontSize: 40 }}>{goal.emoji}</span>
+               <p style={{ fontSize: 16, fontWeight: 600, color: "#F5F7FA", marginTop: 8 }}>{goal.title}</p>
+            </div>
+
+            <div style={{ marginBottom: 24 }}>
+              <label style={{ display: "block", fontSize: 12, color: "#748391", marginBottom: 6 }}>Nominal Top Up (IDR)</label>
+              <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" className="input-field" />
+            </div>
+            <button onClick={handleSave} disabled={saving || !amount}
+              style={{ width: "100%", padding: "14px", borderRadius: 14, border: "none", cursor: "pointer", background: saving || !amount ? "rgba(79,209,197,0.3)" : "#4FD1C5", color: "#0B1215", fontWeight: 700, fontSize: 15 }}>
+              {saving ? "Menyimpan..." : "Top Up Sekarang"}
+            </button>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function GoalsPage() {
   const { user } = useAuth();
   const [goals, setGoals]     = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -115,6 +196,7 @@ export default function GoalsPage() {
   return (
     <div style={{ maxWidth: 960, width: "100%", margin: "0 auto", padding: 20 }}>
       {user && <AddGoalSheet isOpen={showAdd} onClose={() => setShowAdd(false)} userId={user.uid} />}
+      {user && <TopUpSheet goal={selectedGoal} onClose={() => setSelectedGoal(null)} userId={user.uid} />}
 
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
@@ -166,10 +248,16 @@ export default function GoalsPage() {
                     <span style={{ fontSize: 26 }}>{goal.emoji}</span>
                     <p style={{ fontSize: 14, fontWeight: 600, color: "#F5F7FA", marginTop: 8 }}>{goal.title}</p>
                   </div>
-                  <button onClick={() => deleteGoal(goal.id)}
-                    style={{ background: "rgba(232,137,137,0.08)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer" }}>
-                    <X size={13} color="#E88989" />
-                  </button>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <button onClick={() => setSelectedGoal(goal)}
+                      style={{ background: "rgba(79,209,197,0.1)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer" }}>
+                      <Plus size={13} color="#4FD1C5" />
+                    </button>
+                    <button onClick={() => deleteGoal(goal.id)}
+                      style={{ background: "rgba(232,137,137,0.08)", border: "none", borderRadius: 8, padding: 6, cursor: "pointer" }}>
+                      <X size={13} color="#E88989" />
+                    </button>
+                  </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
                   <p style={{ fontSize: 13, color: "#748391", overflowWrap: "anywhere" }}>{formatCurrency(goal.currentAmount)}</p>

@@ -5,20 +5,40 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number, currency = "IDR"): string {
-  if (currency === "IDR") {
-    return new Intl.NumberFormat("id-ID", {
+export function formatCurrency(amount: number, overrideCurrency?: string): string {
+  let currency = overrideCurrency || "IDR";
+  let rate = 1;
+
+  if (typeof window !== "undefined" && !overrideCurrency) {
+    currency = localStorage.getItem("ninja_currency") || "IDR";
+    const ratesJSON = localStorage.getItem("ninja_currency_rates");
+    if (ratesJSON) {
+      try {
+        const data = JSON.parse(ratesJSON);
+        if (data.rates && data.rates[currency]) {
+          rate = data.rates[currency];
+        }
+      } catch(e) {}
+    }
+  }
+
+  const converted = amount * rate;
+  
+  if (currency === "IDR" || currency === "JPY") {
+    return new Intl.NumberFormat(currency === "IDR" ? "id-ID" : "ja-JP", {
       style: "currency",
-      currency: "IDR",
+      currency: currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(converted);
   }
+  
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
-  }).format(amount);
+    maximumFractionDigits: 2,
+  }).format(converted);
 }
 
 export function formatRelativeTime(date: Date): string {

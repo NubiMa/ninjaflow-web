@@ -223,8 +223,16 @@ export default function TransactionsPage() {
   const [loading, setLoading]           = useState(true);
   const [error, setError]               = useState<string | null>(null);
   const [search, setSearch]             = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<TransactionCategory | "all">("all");
   const [dateFilter, setDateFilter]     = useState<"all" | "this_month" | "last_month">("all");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [search]);
   
   const [showAddMenu, setShowAddMenu]       = useState(false);
   const [showForm, setShowForm]             = useState(false);
@@ -257,7 +265,7 @@ export default function TransactionsPage() {
     
     return transactions.filter((t) => {
       // 1. Search text
-      const matchSearch = !search || t.note.toLowerCase().includes(search.toLowerCase()) || (t.merchant ?? "").toLowerCase().includes(search.toLowerCase());
+      const matchSearch = !debouncedSearch || t.note.toLowerCase().includes(debouncedSearch.toLowerCase()) || (t.merchant ?? "").toLowerCase().includes(debouncedSearch.toLowerCase());
       
       // 2. Category
       const matchCategory = activeFilter === "all" || t.category === activeFilter;
@@ -274,7 +282,7 @@ export default function TransactionsPage() {
       
       return matchSearch && matchCategory && matchDate;
     });
-  }, [transactions, search, activeFilter, dateFilter]);
+  }, [transactions, debouncedSearch, activeFilter, dateFilter]);
 
   const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
   const totalIncome  = transactions.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);

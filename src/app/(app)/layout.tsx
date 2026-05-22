@@ -7,6 +7,35 @@ import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import { motion } from "framer-motion";
 
+import { restoreNotificationSchedule } from "@/lib/notifications";
+
+function CurrencyFetcher() {
+  useEffect(() => {
+    restoreNotificationSchedule();
+    async function fetchRates() {
+      try {
+        const CACHE_KEY = "ninja_currency_rates";
+        const CACHE_TIME = 24 * 60 * 60 * 1000;
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const data = JSON.parse(cached);
+          if (Date.now() - data.timestamp < CACHE_TIME) return;
+        }
+
+        const res = await fetch("https://open.er-api.com/v6/latest/IDR");
+        const data = await res.json();
+        if (data && data.rates) {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ rates: data.rates, timestamp: Date.now() }));
+        }
+      } catch (e) {
+        console.error("Failed to fetch rates", e);
+      }
+    }
+    fetchRates();
+  }, []);
+  return null;
+}
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -36,7 +65,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div style={{ display: "flex", minHeight: "100dvh", background: "#0B1215" }}>
+    <div style={{ display: "flex", height: "100dvh", overflow: "hidden", background: "#0B1215" }}>
+      <CurrencyFetcher />
       <Sidebar />
       <main
         style={{

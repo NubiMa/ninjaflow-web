@@ -1,5 +1,5 @@
 import {
-  collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc,
+  collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc,
   query, where, orderBy, limit, onSnapshot, serverTimestamp, Timestamp,
 } from "firebase/firestore";
 import { db } from "./firebase";
@@ -24,6 +24,39 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 
 export async function upsertUserProfile(uid: string, data: Partial<UserProfile>) {
   await setDoc(doc(db, "users", uid), { ...data, updatedAt: serverTimestamp() }, { merge: true });
+}
+
+export async function checkIsAdmin(email: string | null): Promise<boolean> {
+  if (!email) return false;
+  try {
+    const q = query(collection(db, "admins"), where("email", "==", email));
+    const snap = await getDocs(q);
+    if (!snap.empty) return true;
+    
+    // For development convenience without needing to manually edit Firestore
+    const envAdmins = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",");
+    if (envAdmins.includes(email)) return true;
+    
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
+export async function getAllUsersForAdmin(): Promise<UserProfile[]> {
+  const snap = await getDocs(collection(db, "users"));
+  return snap.docs.map(d => {
+    const data = d.data();
+    return {
+      uid: d.id,
+      displayName: data.displayName ?? "Unknown",
+      email: data.email ?? "",
+      photoURL: data.photoURL,
+      currency: data.currency ?? "IDR",
+      monthlyBudget: data.monthlyBudget ?? 0,
+      createdAt: data.createdAt?.toDate() ?? new Date(),
+    };
+  });
 }
 
 // ─── Transactions ─────────────────────────────────────────────────────────────
