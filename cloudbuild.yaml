@@ -21,8 +21,6 @@ steps:
       - "NEXT_PUBLIC_FIREBASE_APP_ID=${_NEXT_PUBLIC_FIREBASE_APP_ID}"
       - "--build-arg"
       - "NEXT_PUBLIC_ADMIN_EMAILS=${_NEXT_PUBLIC_ADMIN_EMAILS}"
-      - "--build-arg"
-      - "NEXT_PUBLIC_GEMINI_VISION_API_KEY=${_NEXT_PUBLIC_GEMINI_VISION_API_KEY}"
       - "."
 
   # Push image to Container Registry
@@ -45,6 +43,7 @@ steps:
       - "--min-instances=0"
       - "--max-instances=3"
       - "--port=8080"
+      - "--set-env-vars=GEMINI_API_KEY=${_GEMINI_API_KEY},VISION_AI_API_KEY=${_VISION_AI_API_KEY}"
 
 images:
   - "gcr.io/$PROJECT_ID/ninja-finance:$COMMIT_SHA"
@@ -61,4 +60,5 @@ substitutions:
   _NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ""
   _NEXT_PUBLIC_FIREBASE_APP_ID: ""
   _NEXT_PUBLIC_ADMIN_EMAILS: ""
-  _NEXT_PUBLIC_GEMINI_VISION_API_KEY: ""
+  _GEMINI_API_KEY: ""
+  _VISION_AI_API_KEY: ""
