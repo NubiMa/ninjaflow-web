@@ -3,11 +3,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, CheckCircle, Smartphone, Camera, User } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, CheckCircle, Smartphone, Camera, User, AlertCircle } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import Logo from "@/components/Logo";
-import { setDoc, doc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+
 
 export default function SignupPage() {
   const { signUpWithEmail, signInWithGoogle } = useAuth();
@@ -28,26 +27,13 @@ export default function SignupPage() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  const createUserProfile = async (uid: string, displayName: string, emailStr: string) => {
-    const userRef = doc(db, "users", uid);
-    await setDoc(userRef, {
-      uid,
-      displayName,
-      email: emailStr,
-      createdAt: new Date().toISOString(),
-      theme: "dark",
-      notificationTime: null
-    });
-  };
-
   const handleEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return setError("Nama tidak boleh kosong.");
     if (password.length < 6) return setError("Password minimal 6 karakter.");
     setError(""); setLoading(true);
     try {
-      const userCredential = await signUpWithEmail(email, password, name);
-      await createUserProfile(userCredential.user.uid, name, email);
+      await signUpWithEmail(email, password, name);
     } catch (err: any) {
       if (err.code === "auth/email-already-in-use") setError("Email sudah terdaftar. Silakan login.");
       else setError("Gagal membuat akun. Coba lagi.");
@@ -110,7 +96,7 @@ export default function SignupPage() {
             {error && (
               <motion.div initial={{ opacity: 0, height: 0, y: -10 }} animate={{ opacity: 1, height: "auto", y: 0 }} exit={{ opacity: 0, height: 0 }} style={{ overflow: "hidden", marginBottom: 24 }}>
                 <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", display: "flex", alignItems: "flex-start", gap: 10 }}>
-                  <div style={{ marginTop: 2 }}><Zap size={16} color="#EF4444" /></div>
+                  <div style={{ marginTop: 2 }}><AlertCircle size={16} color="#EF4444" /></div>
                   <p style={{ fontSize: 13, color: "#FCA5A5", lineHeight: 1.5 }}>{error}</p>
                 </div>
               </motion.div>
