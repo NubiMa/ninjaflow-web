@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle, AlertTriangle, Edit3 } from "lucide-react";
+import { X, CheckCircle, AlertTriangle, Edit3, Sparkles } from "lucide-react";
 import { ScanResult } from "@/app/actions/vision";
 import { TransactionDraft, TransactionCategory, CATEGORY_META } from "@/types";
 import { formatCurrency } from "@/lib/utils";
@@ -82,7 +82,7 @@ export default function ScanResultSheet({ isOpen, result, onClose, onConfirm }: 
             {/* AI disclaimer */}
             <div style={{ padding: "10px 14px", borderRadius: 12, background: "rgba(79,209,197,0.04)", border: "1px solid rgba(79,209,197,0.12)", marginBottom: 20 }}>
               <p style={{ fontSize: 12, color: "#748391", lineHeight: 1.6 }}>
-                ✨ Diperiksa oleh <span style={{ color: "#4FD1C5", fontWeight: 600 }}>AI Ninja</span> — pastikan semua data sudah benar sebelum menyimpan.
+                <Sparkles size={14} color="#F6C177" style={{ display: "inline", marginBottom: 2 }} /> Diperiksa oleh <span style={{ color: "#4FD1C5", fontWeight: 600 }}>AI Ninja</span> — pastikan semua data sudah benar sebelum menyimpan.
               </p>
             </div>
 
@@ -136,7 +136,7 @@ export default function ScanResultSheet({ isOpen, result, onClose, onConfirm }: 
                         border: `1px solid ${isActive ? m.color : "rgba(255,255,255,0.06)"}`,
                         background: isActive ? m.bg : "rgba(255,255,255,0.02)", transition: "all 0.15s",
                       }}>
-                      <span style={{ fontSize: 20 }}>{m.emoji}</span>
+                      <m.icon size={20} color={isActive ? m.color : "#748391"} />
                       <span style={{ fontSize: 10, color: draft.category === cat ? m.color : "#748391", fontWeight: 500, textAlign: "center", wordBreak: "break-word" }}>{m.label}</span>
                     </button>
                   );
