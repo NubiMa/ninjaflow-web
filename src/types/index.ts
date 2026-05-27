@@ -57,21 +57,36 @@ export interface UserProfile {
   createdAt: Date;
 }
 
+import {
+  Utensils,
+  Car,
+  ShoppingBag,
+  Gamepad2,
+  HeartPulse,
+  GraduationCap,
+  Receipt,
+  Briefcase,
+  TrendingUp,
+  Laptop,
+  Package
+} from "lucide-react";
+import { LucideIcon } from "lucide-react";
+
 export const CATEGORY_META: Record<
   TransactionCategory,
-  { label: string; emoji: string; color: string; bg: string }
+  { label: string; icon: LucideIcon; emoji: string; color: string; bg: string }
 > = {
-  food:          { label: "Makanan",      emoji: "🍜", color: "#F6C177", bg: "rgba(246,193,119,0.1)" },
-  transport:     { label: "Transport",    emoji: "🚗", color: "#7DD3FC", bg: "rgba(125,211,252,0.1)" },
-  shopping:      { label: "Belanja",      emoji: "🛍️", color: "#C084FC", bg: "rgba(192,132,252,0.1)" },
-  entertainment: { label: "Hiburan",      emoji: "🎮", color: "#F472B6", bg: "rgba(244,114,182,0.1)" },
-  health:        { label: "Kesehatan",    emoji: "💊", color: "#6EE7B7", bg: "rgba(110,231,183,0.1)" },
-  education:     { label: "Pendidikan",   emoji: "📚", color: "#4FD1C5", bg: "rgba(79,209,197,0.1)" },
-  bills:         { label: "Tagihan",      emoji: "🧾", color: "#E88989", bg: "rgba(232,137,137,0.1)" },
-  salary:        { label: "Gaji",         emoji: "💼", color: "#6EE7B7", bg: "rgba(110,231,183,0.1)" },
-  investment:    { label: "Investasi",    emoji: "📈", color: "#4FD1C5", bg: "rgba(79,209,197,0.1)" },
-  freelance:     { label: "Freelance",    emoji: "💻", color: "#7DD3FC", bg: "rgba(125,211,252,0.1)" },
-  other:         { label: "Lainnya",      emoji: "📦", color: "#AAB7C2", bg: "rgba(170,183,194,0.1)" },
+  food:          { label: "Makanan",      icon: Utensils,      emoji: "🍜", color: "#F6C177", bg: "rgba(246,193,119,0.1)" },
+  transport:     { label: "Transport",    icon: Car,           emoji: "🚗", color: "#7DD3FC", bg: "rgba(125,211,252,0.1)" },
+  shopping:      { label: "Belanja",      icon: ShoppingBag,   emoji: "🛍️", color: "#C084FC", bg: "rgba(192,132,252,0.1)" },
+  entertainment: { label: "Hiburan",      icon: Gamepad2,      emoji: "🎮", color: "#F472B6", bg: "rgba(244,114,182,0.1)" },
+  health:        { label: "Kesehatan",    icon: HeartPulse,    emoji: "💊", color: "#6EE7B7", bg: "rgba(110,231,183,0.1)" },
+  education:     { label: "Pendidikan",   icon: GraduationCap, emoji: "📚", color: "#4FD1C5", bg: "rgba(79,209,197,0.1)" },
+  bills:         { label: "Tagihan",      icon: Receipt,       emoji: "🧾", color: "#E88989", bg: "rgba(232,137,137,0.1)" },
+  salary:        { label: "Gaji",         icon: Briefcase,     emoji: "💼", color: "#6EE7B7", bg: "rgba(110,231,183,0.1)" },
+  investment:    { label: "Investasi",    icon: TrendingUp,    emoji: "📈", color: "#4FD1C5", bg: "rgba(79,209,197,0.1)" },
+  freelance:     { label: "Freelance",    icon: Laptop,        emoji: "💻", color: "#7DD3FC", bg: "rgba(125,211,252,0.1)" },
+  other:         { label: "Lainnya",      icon: Package,       emoji: "📦", color: "#AAB7C2", bg: "rgba(170,183,194,0.1)" },
 };
 
 // Rule-based categorization (reduces AI token usage)

@@ -26,8 +26,8 @@ export default function Sidebar() {
       style={{
         width: 240,
         minHeight: "100vh",
-        background: "#0D1A1F",
-        borderRight: "1px solid rgba(255,255,255,0.05)",
+        background: "#030712",
+        borderRight: "1px solid rgba(255,255,255,0.03)",
         position: "sticky",
         top: 0,
         flexShrink: 0,

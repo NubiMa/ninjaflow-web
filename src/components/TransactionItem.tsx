@@ -16,56 +16,70 @@ export default function TransactionItem({ transaction, index = 0, onDelete }: Tr
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -12 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.04, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, scale: 0.98, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ 
+        scale: 1.01, 
+        backgroundColor: "rgba(255, 255, 255, 0.06)", 
+        borderColor: "rgba(255, 255, 255, 0.1)",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.15)"
+      }}
+      whileTap={{ scale: 0.99 }}
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 14,
-        padding: "13px 16px",
-        borderRadius: 14,
-        background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.04)",
-        transition: "background 0.15s ease",
+        gap: 16,
+        padding: "16px",
+        borderRadius: 20,
+        background: "rgba(255, 255, 255, 0.02)",
+        border: "1px solid rgba(255, 255, 255, 0.03)",
+        backdropFilter: "blur(12px)",
+        transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        cursor: "pointer",
+        position: "relative",
+        overflow: "hidden"
       }}
-      whileHover={{ background: "rgba(255,255,255,0.04)" }}
     >
+      <div style={{ position: "absolute", inset: 0, background: `linear-gradient(90deg, ${meta.color}05, transparent)`, pointerEvents: "none" }} />
+      
       {/* Category Icon */}
       <div
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: 12,
+          width: 44,
+          height: 44,
+          borderRadius: 14,
           background: meta.bg,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 18,
+          fontSize: 20,
           flexShrink: 0,
+          boxShadow: `0 4px 12px ${meta.color}20`,
+          border: `1px solid ${meta.color}20`
         }}
       >
-        {meta.emoji}
+        <meta.icon size={20} color={meta.color} />
       </div>
 
       {/* Info */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: 13, fontWeight: 500, color: "#F5F7FA", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+      <div style={{ flex: 1, minWidth: 0, zIndex: 1 }}>
+        <p style={{ fontSize: 15, fontWeight: 700, color: "#F8FAFC", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", letterSpacing: "-0.01em", marginBottom: 2 }}>
           {transaction.note || transaction.merchant || meta.label}
         </p>
-        <p style={{ fontSize: 11.5, color: "#748391", marginTop: 2 }}>
-          {meta.label} · {formatRelativeTime(transaction.date)}
+        <p style={{ fontSize: 13, color: "#94A3B8", fontWeight: 500 }}>
+          {meta.label} <span style={{ color: "#475569", margin: "0 4px" }}>•</span> {formatRelativeTime(transaction.date)}
         </p>
       </div>
 
       {/* Amount */}
-      <div style={{ textAlign: "right", flexShrink: 0 }}>
+      <div style={{ textAlign: "right", flexShrink: 0, zIndex: 1 }}>
         <p
           style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: isExpense ? "#E88989" : "#6EE7B7",
-            letterSpacing: "-0.01em",
+            fontSize: 15,
+            fontWeight: 800,
+            color: isExpense ? "#F87171" : "#4ADE80",
+            letterSpacing: "-0.02em",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",

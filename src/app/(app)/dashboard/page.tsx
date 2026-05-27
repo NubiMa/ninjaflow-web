@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, ArrowDownLeft, Bell, Plus, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, Plus, ChevronRight, Activity, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { subscribeToTransactions } from "@/lib/db";
@@ -102,7 +102,7 @@ export default function DashboardPage() {
         fetchInsight();
       }
     }
-  }, [loading, error]); // Intentionally not listening to transactions.length to avoid spam
+  }, [loading, error]); 
 
   if (error) {
     const isIndexError = error.includes("requires an index");
@@ -110,15 +110,15 @@ export default function DashboardPage() {
     const link = linkMatch ? linkMatch[0] : null;
 
     return (
-      <div style={{ padding: 40, textAlign: "center", color: "#E88989", background: "rgba(232,137,137,0.05)", borderRadius: 16, border: "1px solid rgba(232,137,137,0.1)", margin: "20px 0" }}>
-        <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 8 }}>
+      <div style={{ padding: 40, textAlign: "center", color: "#F87171", background: "rgba(248, 113, 113, 0.05)", borderRadius: 24, border: "1px solid rgba(248, 113, 113, 0.1)", margin: "20px 0" }}>
+        <p style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>
           {isIndexError ? "Membutuhkan Firestore Composite Index" : "Gagal memuat data"}
         </p>
-        <p style={{ fontSize: 13, color: "#AAB7C2", lineHeight: 1.5, wordBreak: "break-word" }}>
+        <p style={{ fontSize: 14, color: "#94A3B8", lineHeight: 1.6, wordBreak: "break-word" }}>
           {isIndexError ? "Query ini membutuhkan index khusus di Firestore. Klik tombol di bawah untuk membuatnya secara otomatis:" : error}
         </p>
         {link && (
-          <a href={link} target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: 16, padding: "10px 20px", background: "#E88989", color: "#0B1215", borderRadius: 10, textDecoration: "none", fontSize: 13, fontWeight: 700 }}>
+          <a href={link} target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: 24, padding: "12px 24px", background: "#F87171", color: "#030712", borderRadius: 12, textDecoration: "none", fontSize: 14, fontWeight: 700 }}>
             Buat Index Firestore
           </a>
         )}
@@ -126,164 +126,152 @@ export default function DashboardPage() {
     );
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+  };
+
   return (
-    <div style={{ maxWidth: 960, width: "100%", margin: "0 auto", padding: 20 }}>
+    <motion.div variants={containerVariants} initial="hidden" animate="show" style={{ maxWidth: 1000, width: "100%", margin: "0 auto", padding: "32px 20px" }}>
+      
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}
-      >
+      <motion.div variants={itemVariants} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 40 }}>
         <div>
-          <p style={{ fontSize: 13, color: "#748391", marginBottom: 4 }}>
-            {getGreeting()}, {user?.displayName?.split(" ")[0] ?? "Ninja"} 👋
+          <p style={{ fontSize: 14, color: "#94A3B8", marginBottom: 6, fontWeight: 500 }}>
+            {getGreeting()}, <span style={{ color: "#E2E8F0" }}>{user?.displayName?.split(" ")[0] ?? "Ninja"}</span> 👋
           </p>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#F5F7FA", letterSpacing: "-0.02em" }}>
-            Dashboard
+          <h1 style={{ fontSize: 32, fontWeight: 800, color: "#F8FAFC", letterSpacing: "-0.03em" }}>
+            Overview
           </h1>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <Link href="/dashboard/transactions">
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "9px 16px",
-                borderRadius: 12,
-                background: "#4FD1C5",
-                color: "#0B1215",
-                fontWeight: 600,
-                fontSize: 13,
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              <Plus size={15} strokeWidth={2.5} />
-              Tambah
-            </motion.button>
-          </Link>
-        </div>
+        <Link href="/dashboard/transactions">
+          <motion.button
+            whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(79,209,197,0.3)" }}
+            whileTap={{ scale: 0.95 }}
+            style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 20px", borderRadius: 16, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", color: "#030712", fontWeight: 700, fontSize: 14, border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(79,209,197,0.2)" }}
+          >
+            <Plus size={18} strokeWidth={3} />
+            <span>Catat</span>
+          </motion.button>
+        </Link>
       </motion.div>
 
-      {/* Balance Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          borderRadius: 24,
-          background: "linear-gradient(135deg, #152129 0%, #1a2d38 100%)",
-          border: "1px solid rgba(79,209,197,0.12)",
-          padding: "28px 28px",
-          marginBottom: 24,
-        }}
-      >
-        <div style={{ position: "absolute",margin : 10, width: 180, height: 180, borderRadius: "50%", background: "rgba(79,209,197,0.05)", filter: "blur(50px)", pointerEvents: "none" }} />
-        <p style={{ fontSize: 12, color: "#748391", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
-          Total Saldo
-        </p>
-        {loading ? (
-          <div className="skeleton" style={{ height: 40, width: 200, borderRadius: 8, marginBottom: 8 }} />
-        ) : (
-          <h2 style={{ fontSize: 28, fontWeight: 800, color: allTimeBalance >= 0 ? "#4FD1C5" : "#E88989", letterSpacing: "-0.03em", marginBottom: 20, overflowWrap: "anywhere" }}>
-            {formatCurrency(allTimeBalance)}
-          </h2>
-        )}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: "rgba(110,231,183,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ArrowDownLeft size={16} color="#6EE7B7" strokeWidth={2} />
-            </div>
-            <div>
-              <p style={{ fontSize: 11, color: "#748391" }}>Total Pemasukan</p>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "#6EE7B7", overflowWrap: "anywhere" }}>{loading ? "—" : formatCurrency(totalAllTimeIncome)}</p>
-            </div>
+      {/* Hero Balance Card */}
+      <motion.div variants={itemVariants} style={{ position: "relative", overflow: "hidden", borderRadius: 32, background: "linear-gradient(145deg, rgba(21, 33, 41, 0.9) 0%, rgba(11, 18, 21, 1) 100%)", border: "1px solid rgba(255, 255, 255, 0.05)", padding: "40px", marginBottom: 32, boxShadow: "0 20px 40px rgba(0,0,0,0.3)" }}>
+        {/* Abstract Background Orbs */}
+        <div style={{ position: "absolute", top: -50, right: -50, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(79,209,197,0.15) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -100, left: -50, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(125,211,252,0.1) 0%, transparent 70%)", filter: "blur(40px)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", inset: 0, background: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.02%22/%3E%3C/svg%3E')", pointerEvents: "none" }} />
+
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+            <Activity size={16} color="#94A3B8" />
+            <p style={{ fontSize: 13, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>Total Kekayaan</p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: "rgba(232,137,137,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ArrowUpRight size={16} color="#E88989" strokeWidth={2} />
+          
+          {loading ? (
+            <div className="skeleton" style={{ height: 60, width: 250, borderRadius: 12, marginBottom: 32 }} />
+          ) : (
+            <h2 style={{ fontSize: "clamp(40px, 6vw, 56px)", fontWeight: 800, color: allTimeBalance >= 0 ? "#F8FAFC" : "#F87171", letterSpacing: "-0.03em", marginBottom: 40, lineHeight: 1.1 }}>
+              {formatCurrency(allTimeBalance)}
+            </h2>
+          )}
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 24, borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 32 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(74,222,128,0.1)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(74,222,128,0.2)" }}>
+                <ArrowDownLeft size={20} color="#4ADE80" strokeWidth={2.5} />
+              </div>
+              <div>
+                <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 4, fontWeight: 500 }}>Total Pemasukan</p>
+                <p style={{ fontSize: 18, fontWeight: 700, color: "#4ADE80" }}>{loading ? "—" : formatCurrency(totalAllTimeIncome)}</p>
+              </div>
             </div>
-            <div>
-              <p style={{ fontSize: 11, color: "#748391" }}>Total Pengeluaran</p>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "#E88989", overflowWrap: "anywhere" }}>{loading ? "—" : formatCurrency(totalAllTimeExpense)}</p>
+            
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(248,113,113,0.1)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(248,113,113,0.2)" }}>
+                <ArrowUpRight size={20} color="#F87171" strokeWidth={2.5} />
+              </div>
+              <div>
+                <p style={{ fontSize: 13, color: "#94A3B8", marginBottom: 4, fontWeight: 500 }}>Total Pengeluaran</p>
+                <p style={{ fontSize: 18, fontWeight: 700, color: "#F87171" }}>{loading ? "—" : formatCurrency(totalAllTimeExpense)}</p>
+              </div>
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Stats + AI Grid */}
-      <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 4, marginBottom: 24, scrollbarWidth: "none" }}>
-        <div style={{ flex: "1 0 140px" }}>
-          <StatCard label="Transaksi" value={loading ? "—" : `${thisMonth.length}x`} sub="Bulan ini" index={0} />
-        </div>
-        <div style={{ flex: "1 0 140px" }}>
-          <StatCard label="Terbesar" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.max(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), 0)) : "—")} sub="Pengeluaran" accent="#E88989" index={1} />
-        </div>
-        <div style={{ flex: "1 0 140px" }}>
-          <StatCard label="Terkecil" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), Infinity) === Infinity ? 0 : Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount))) : "—")} sub="Pengeluaran" accent="#F6C177" index={2} />
-        </div>
-      </div>
+      {/* Stats Grid */}
+      <motion.div variants={itemVariants} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16, marginBottom: 32 }}>
+        <StatCard label="Transaksi Bulan Ini" value={loading ? "—" : `${thisMonth.length}`} sub="Aktivitas" index={0} accent="#7DD3FC" />
+        <StatCard label="Pengeluaran Terbesar" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.max(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), 0)) : "—")} sub="Bulan ini" accent="#F87171" index={1} />
+        <StatCard label="Pengeluaran Terkecil" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), Infinity) === Infinity ? 0 : Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount))) : "—")} sub="Bulan ini" accent="#FCD34D" index={2} />
+      </motion.div>
 
-      {/* Main Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+      {/* Main Bottom Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
+        
         {/* AI Reflection */}
-        <div style={{ gridColumn: "1 / -1" }}>
+        <motion.div variants={itemVariants}>
           <AIReflectionCard summary={aiResult?.reflection || ""} isLoading={loadingAi || loading} onRefresh={handleManualRefresh} />
-        </div>
+        </motion.div>
 
         {/* Recent Transactions */}
-        <div style={{ gridColumn: "1 / -1" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-            <h2 style={{ fontSize: 15, fontWeight: 600, color: "#F5F7FA" }}>Transaksi Terbaru</h2>
-            <Link href="/dashboard/transactions" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#4FD1C5" }}>
-              Lihat semua <ChevronRight size={13} strokeWidth={2} />
+        <motion.div variants={itemVariants} style={{ background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.03)", borderRadius: 24, padding: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#F8FAFC", letterSpacing: "-0.01em" }}>Aktivitas Terbaru</h2>
+            <Link href="/dashboard/transactions">
+              <motion.div whileHover={{ x: 2, color: "#7DD3FC" }} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13, fontWeight: 600, color: "#4FD1C5", cursor: "pointer" }}>
+                Semua <ChevronRight size={14} strokeWidth={2.5} />
+              </motion.div>
             </Link>
           </div>
+          
           {loading ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="skeleton" style={{ height: 58, borderRadius: 14 }} />
+                <div key={i} className="skeleton" style={{ height: 70, borderRadius: 20 }} />
               ))}
             </div>
           ) : recent.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "40px 20px", color: "#748391", background: "rgba(255,255,255,0.02)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.04)" }}>
-              <p style={{ fontSize: 28, marginBottom: 8 }}>📭</p>
-              <p style={{ fontSize: 14 }}>Belum ada transaksi</p>
-              <p style={{ fontSize: 12, marginTop: 4 }}>Tambah transaksi pertamamu!</p>
+            <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748B", background: "rgba(255,255,255,0.02)", borderRadius: 20, border: "1px dashed rgba(255,255,255,0.1)" }}>
+              <p style={{ fontSize: 40, marginBottom: 16 }}>📭</p>
+              <p style={{ fontSize: 16, fontWeight: 600, color: "#E2E8F0" }}>Belum ada aktivitas</p>
+              <p style={{ fontSize: 14, marginTop: 8 }}>Mulai catat pengeluaran atau pemasukan pertamamu.</p>
             </div>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {recent.map((t, i) => <TransactionItem key={t.id} transaction={t} index={i} />)}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {/* Toast Popup */}
       <AnimatePresence>
         {toastMsg && (
           <motion.div
-            initial={{ opacity: 0, y: 50, x: "-50%" }}
-            animate={{ opacity: 1, y: 0, x: "-50%" }}
-            exit={{ opacity: 0, y: 50, x: "-50%" }}
+            initial={{ opacity: 0, y: 50, scale: 0.9, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
+            exit={{ opacity: 0, y: 20, scale: 0.9, x: "-50%" }}
             style={{
-              position: "fixed", bottom: 100, left: "50%",
-              background: "#152129", border: "1px solid rgba(79,209,197,0.3)",
-              padding: "12px 20px", borderRadius: 99, color: "#F5F7FA", fontSize: 13,
-              fontWeight: 500, boxShadow: "0 10px 30px rgba(0,0,0,0.5)", zIndex: 100,
-              display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap"
+              position: "fixed", bottom: 40, left: "50%",
+              background: "rgba(11, 18, 21, 0.9)", backdropFilter: "blur(12px)",
+              border: "1px solid rgba(79,209,197,0.3)",
+              padding: "16px 24px", borderRadius: 100, color: "#F8FAFC", fontSize: 14,
+              fontWeight: 600, boxShadow: "0 20px 40px rgba(0,0,0,0.5)", zIndex: 100,
+              display: "flex", alignItems: "center", gap: 12, whiteSpace: "nowrap"
             }}
           >
-            <span>✨</span> {toastMsg}
+            <Sparkles size={16} color="#4FD1C5" /> {toastMsg}
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

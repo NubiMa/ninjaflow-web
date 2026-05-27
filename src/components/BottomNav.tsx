@@ -22,7 +22,7 @@ export default function BottomNav() {
       style={{
         padding: "8px 12px",
         paddingBottom: "calc(8px + env(safe-area-inset-bottom))",
-        background: "rgba(11,18,21,0.85)",
+        background: "rgba(3,7,18,0.85)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         borderTop: "1px solid rgba(255,255,255,0.06)",

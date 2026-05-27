@@ -173,3 +173,22 @@ export async function updateGoalAmount(goalId: string, amount: number): Promise<
 export async function deleteGoal(goalId: string): Promise<void> {
   await deleteDoc(doc(db, "goals", goalId));
 }
+
+export async function deleteGoalWithRefund(
+  userId: string,
+  goal: { id: string; title: string; currentAmount: number }
+): Promise<void> {
+  // Only refund if the goal had money in it
+  if (goal.currentAmount > 0) {
+    await addTransaction(userId, {
+      type: "income",
+      category: "investment",
+      amount: goal.currentAmount,
+      date: new Date(),
+      note: `Refund Goal: ${goal.title}`,
+      merchant: "Ninja Goals"
+    });
+  }
+  await deleteDoc(doc(db, "goals", goal.id));
+}
+
