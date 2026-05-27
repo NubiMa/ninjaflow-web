@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, ShieldCheck, Camera, Brain } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, ShieldCheck, Camera, Brain, AlertCircle } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import Logo from "@/components/Logo";
 
@@ -146,7 +146,7 @@ export default function LoginPage() {
             {error && (
               <motion.div initial={{ opacity: 0, height: 0, y: -10 }} animate={{ opacity: 1, height: "auto", y: 0 }} exit={{ opacity: 0, height: 0 }} style={{ overflow: "hidden", marginBottom: 24 }}>
                 <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", display: "flex", alignItems: "flex-start", gap: 10 }}>
-                  <div style={{ marginTop: 2 }}><Zap size={16} color="#EF4444" /></div>
+                  <div style={{ marginTop: 2 }}><AlertCircle size={16} color="#EF4444" /></div>
                   <p style={{ fontSize: 13, color: "#FCA5A5", lineHeight: 1.5 }}>{error}</p>
                 </div>
               </motion.div>
