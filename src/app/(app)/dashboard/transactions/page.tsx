@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Plus, X, Camera, Image as ImageIcon, Edit3, Zap } from "lucide-react";
+import { Search, Plus, X, Camera, Image as ImageIcon, Edit3 } from "lucide-react";
+import Logo from "@/components/Logo";
 import { useAuth } from "@/components/AuthProvider";
 import { subscribeToTransactions, addTransaction, deleteTransaction, updateTransaction } from "@/lib/db";
 import TransactionItem from "@/components/TransactionItem";
@@ -384,7 +385,7 @@ export default function TransactionsPage() {
         {isUploading && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: "fixed", inset: 0, background: "rgba(3,7,18,0.8)", backdropFilter: "blur(8px)", zIndex: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
             <motion.div animate={{ scale: [1, 1.2, 1], boxShadow: ["0 0 0px rgba(79,209,197,0)", "0 0 30px rgba(79,209,197,0.5)", "0 0 0px rgba(79,209,197,0)"] }} transition={{ duration: 1.5, repeat: Infinity }} style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(79,209,197,0.1)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(79,209,197,0.3)" }}>
-              <Zap size={28} color="#4FD1C5" />
+              <Logo size={28} />
             </motion.div>
             <p style={{ fontSize: 15, color: "#4FD1C5", fontWeight: 700, letterSpacing: "0.02em" }}>AI sedang membaca struk...</p>
           </motion.div>

@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff, Zap, ArrowLeft, CheckCircle, Smartphone, Camera } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, CheckCircle, Smartphone, Camera, User } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
+import Logo from "@/components/Logo";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -93,7 +94,7 @@ export default function SignupPage() {
           
           <motion.div variants={itemVariants} className="flex lg:hidden" style={{ alignItems: "center", gap: 12, marginBottom: 40 }}>
             <div style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Zap size={20} color="#030712" strokeWidth={2.5} />
+              <Logo size={20} color="#0B1215" />
             </div>
             <span style={{ fontSize: 20, fontWeight: 800, color: "#F8FAFC" }}>Ninja</span>
           </motion.div>
@@ -135,7 +136,7 @@ export default function SignupPage() {
           <motion.form variants={itemVariants} onSubmit={handleEmail} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ position: "relative" }}>
               <div style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "#64748B", pointerEvents: "none" }}>
-                <Zap size={18} />
+                <User size={18} />
               </div>
               <input type="text" required value={name} onChange={e => setName(e.target.value)} placeholder="Nama panggilan" 
                 style={{ width: "100%", padding: "16px 16px 16px 48px", borderRadius: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", color: "#F8FAFC", fontSize: 15, outline: "none", transition: "all 0.2s" }}
@@ -197,8 +198,8 @@ export default function SignupPage() {
         <div style={{ position: "relative", zIndex: 1, maxWidth: 480, padding: 40 }}>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 60 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 16, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 40px rgba(79,209,197,0.3)" }}>
-                <Zap size={24} color="#030712" strokeWidth={2.5} />
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 25px rgba(79,209,197,0.3)" }}>
+                <Logo size={24} color="#0B1215" />
               </div>
               <span style={{ fontSize: 24, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.02em" }}>Ninja Finance</span>
             </div>

@@ -177,7 +177,7 @@ export default function DashboardPage() {
           {loading ? (
             <div className="skeleton" style={{ height: 60, width: 250, borderRadius: 12, marginBottom: 32 }} />
           ) : (
-            <h2 style={{ fontSize: "clamp(40px, 6vw, 56px)", fontWeight: 800, color: allTimeBalance >= 0 ? "#F8FAFC" : "#F87171", letterSpacing: "-0.03em", marginBottom: 40, lineHeight: 1.1 }}>
+            <h2 style={{ fontSize: "clamp(28px, 8vw, 56px)", fontWeight: 800, color: allTimeBalance >= 0 ? "#F8FAFC" : "#F87171", letterSpacing: "-0.03em", marginBottom: 40, lineHeight: 1.1 }}>
               {formatCurrency(allTimeBalance)}
             </h2>
           )}
@@ -213,8 +213,7 @@ export default function DashboardPage() {
         <StatCard label="Pengeluaran Terkecil" value={loading ? "—" : (thisMonth.length ? formatCurrency(Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount), Infinity) === Infinity ? 0 : Math.min(...thisMonth.filter(t=>t.type==="expense").map(t=>t.amount))) : "—")} sub="Bulan ini" accent="#FCD34D" index={2} />
       </motion.div>
 
-      {/* Main Bottom Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         
         {/* AI Reflection */}
         <motion.div variants={itemVariants}>

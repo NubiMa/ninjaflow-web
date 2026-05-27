@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Camera, RotateCcw, Zap, RefreshCcw, Check } from "lucide-react";
+import { X, Camera, RotateCcw, RefreshCcw, Check } from "lucide-react";
+import Logo from "@/components/Logo";
 import { captureVideoFrame, CompressedImage } from "@/lib/compress-image";
 import { scanReceiptImage, ScanResult } from "@/app/actions/vision";
 
@@ -222,7 +223,7 @@ export default function CameraSheet({ isOpen, onClose, onResult }: CameraSheetPr
                 <div style={{ position: "absolute", inset: 0, background: "rgba(11,18,21,0.8)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
                   <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 1, repeat: Infinity }}
                     style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(79,209,197,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Zap size={24} color="#4FD1C5" />
+                    <Logo size={24} />
                   </motion.div>
                   <p style={{ fontSize: 14, color: "#4FD1C5", fontWeight: 600 }}>AI sedang membaca struk...</p>
                 </div>

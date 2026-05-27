@@ -62,32 +62,27 @@ export default function TransactionItem({ transaction, index = 0, onDelete }: Tr
         <meta.icon size={20} color={meta.color} />
       </div>
 
-      {/* Info */}
-      <div style={{ flex: 1, minWidth: 0, zIndex: 1 }}>
-        <p style={{ fontSize: 15, fontWeight: 700, color: "#F8FAFC", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", letterSpacing: "-0.01em", marginBottom: 2 }}>
+      {/* Info & Amount */}
+      <div style={{ flex: 1, minWidth: 0, zIndex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: "#F8FAFC", wordBreak: "break-word", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
           {transaction.note || transaction.merchant || meta.label}
         </p>
-        <p style={{ fontSize: 13, color: "#94A3B8", fontWeight: 500 }}>
-          {meta.label} <span style={{ color: "#475569", margin: "0 4px" }}>•</span> {formatRelativeTime(transaction.date)}
-        </p>
-      </div>
-
-      {/* Amount */}
-      <div style={{ textAlign: "right", flexShrink: 0, zIndex: 1 }}>
-        <p
-          style={{
-            fontSize: 15,
-            fontWeight: 800,
-            color: isExpense ? "#F87171" : "#4ADE80",
-            letterSpacing: "-0.02em",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: 120,
-          }}
-        >
-          {isExpense ? "−" : "+"}{formatCurrency(transaction.amount)}
-        </p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 8 }}>
+          <p style={{ fontSize: 12, color: "#94A3B8", fontWeight: 500 }}>
+            {meta.label} <span style={{ color: "#475569", margin: "0 4px" }}>•</span> {formatRelativeTime(transaction.date)}
+          </p>
+          <p
+            style={{
+              fontSize: 14,
+              fontWeight: 800,
+              color: isExpense ? "#F87171" : "#4ADE80",
+              letterSpacing: "-0.02em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {isExpense ? "−" : "+"}{formatCurrency(transaction.amount)}
+          </p>
+        </div>
       </div>
     </motion.div>
   );

@@ -7,6 +7,7 @@ import {
   Home, ArrowLeftRight, Sparkles, Target, User, LogOut, Zap,
 } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
+import Logo from "@/components/Logo";
 
 const navItems = [
   { href: "/dashboard",              icon: Home,           label: "Dashboard" },
@@ -48,7 +49,7 @@ export default function Sidebar() {
               flexShrink: 0,
             }}
           >
-            <Zap size={18} color="#0B1215" strokeWidth={2.5} />
+            <Logo size={18} color="#0B1215" />
           </div>
           <span style={{ fontSize: 17, fontWeight: 700, color: "#F5F7FA", letterSpacing: "-0.02em" }}>
             Ninja Flow

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { ArrowRight, Zap, Sparkles, ChevronDown, CheckCircle2, Menu, X } from "lucide-react";
 import FeatureBento from "@/components/landing/FeatureBento";
 import HeroMockup from "@/components/landing/HeroMockup";
+import Logo from "@/components/Logo";
 
 const FAQS = [
   { q: "Apakah Ninja Finance benar-benar gratis?", a: "Ya, 100% gratis. Tidak ada uji coba, tidak ada kartu kredit. Semua fitur inti — termasuk AI Insights dan Receipt Scanner — tersedia tanpa biaya." },
@@ -47,7 +48,7 @@ function NavBar() {
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Zap size={16} color="#0B1215" strokeWidth={2.5} />
+            <Logo size={18} color="#0B1215" />
           </div>
           <span style={{ fontSize: 17, fontWeight: 800, color: "#F5F7FA", letterSpacing: "-0.02em" }}>Ninja Finance</span>
         </div>
@@ -121,10 +122,10 @@ export default function LandingPage() {
         <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: "90vw", maxWidth: 1000, height: 600, background: "radial-gradient(ellipse, rgba(79,209,197,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
 
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "60px 24px", width: "100%", position: "relative", zIndex: 10 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }} className="grid-cols-1 lg:grid-cols-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
 
             {/* Left: Copy */}
-            <div>
+            <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px", borderRadius: 99, background: "rgba(79,209,197,0.08)", border: "1px solid rgba(79,209,197,0.2)", marginBottom: 32 }}>
                   <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4FD1C5", boxShadow: "0 0 8px #4FD1C5" }} />
@@ -140,18 +141,18 @@ export default function LandingPage() {
 
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
                 style={{ fontSize: "clamp(16px, 1.8vw, 19px)", color: "#AAB7C2", lineHeight: 1.65, marginBottom: 40 }}>
-                Ninja bukan sekadar pencatat uang. Ini adalah AI companion yang membantu kamu memahami pola keuangan — scan struk otomatis, insight mingguan dari Gemini AI, dan goal tracking — semua dalam satu app yang terasa ringan dan menenangkan.
+                Ninja bukan sekadar pencatat uang, ini adalah AI companion yang membantu kamu memahami pola keuangan. Scan struk otomatis, insight mingguan dari Gemini AI, dan goal tracking. Semua dalam satu app yang terasa ringan dan menenangkan.
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
-                style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                style={{ display: "flex", flexDirection: "column", gap: 16 }} className="items-center lg:items-start">
                 <Link href="/auth/signup" style={{ textDecoration: "none" }}>
                   <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "16px 32px", borderRadius: 14, background: "#FFFFFF", color: "#0B1215", fontWeight: 700, fontSize: 16, border: "none", cursor: "pointer", boxShadow: "0 10px 30px rgba(255,255,255,0.12)" }}>
                     Mulai Gratis Sekarang <ArrowRight size={18} strokeWidth={2.5} />
                   </motion.button>
                 </Link>
-                <div style={{ display: "flex", gap: 24 }}>
+                <div style={{ display: "flex", gap: 24, justifyContent: "center" }} className="lg:justify-start">
                   <span style={{ display: "flex", alignItems: "center", gap: 6, color: "#748391", fontSize: 13, fontWeight: 500 }}>
                     <CheckCircle2 size={14} color="#4FD1C5" /> Tidak perlu kartu kredit
                   </span>
@@ -199,7 +200,7 @@ export default function LandingPage() {
               Tidak perlu tutorial panjang. Ninja dirancang agar kamu langsung paham sejak detik pertama.
             </motion.p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }} className="grid-cols-1 md:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {HOW_IT_WORKS.map(({ step, title, desc }, i) => (
               <motion.div key={step} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }}
                 style={{ padding: 32, borderRadius: 28, background: "#10181D", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -269,7 +270,7 @@ export default function LandingPage() {
             ))}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <Zap size={14} color="#4FD1C5" />
+            <Logo size={16} />
             <span>© 2026 Ninja Finance. Crafted with extreme care.</span>
           </div>
         </div>

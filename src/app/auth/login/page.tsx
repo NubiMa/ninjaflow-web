@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff, Zap, ArrowLeft, ShieldCheck, Camera, Brain } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, ShieldCheck, Camera, Brain } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
+import Logo from "@/components/Logo";
 
 export default function LoginPage() {
   const { signInWithEmail, signInWithGoogle } = useAuth();
@@ -79,8 +80,8 @@ export default function LoginPage() {
         <div style={{ position: "relative", zIndex: 1, maxWidth: 480, padding: 40 }}>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 60 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 16, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 40px rgba(79,209,197,0.3)" }}>
-                <Zap size={24} color="#030712" strokeWidth={2.5} />
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, boxShadow: "0 10px 25px rgba(79,209,197,0.3)" }}>
+                <Logo size={24} color="#0B1215" />
               </div>
               <span style={{ fontSize: 24, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.02em" }}>Ninja Finance</span>
             </div>
@@ -129,7 +130,7 @@ export default function LoginPage() {
           
           <motion.div variants={itemVariants} className="flex lg:hidden" style={{ alignItems: "center", gap: 12, marginBottom: 40 }}>
             <div style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(135deg, #4FD1C5, #7DD3FC)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Zap size={20} color="#030712" strokeWidth={2.5} />
+              <Logo size={20} color="#0B1215" />
             </div>
             <span style={{ fontSize: 20, fontWeight: 800, color: "#F8FAFC" }}>Ninja</span>
           </motion.div>

@@ -1,0 +1,14 @@
+<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ninja-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#4FD1C5" />
+      <stop offset="100%" stopColor="#7DD3FC" />
+    </linearGradient>
+  </defs>
+  <path
+    fillRule="evenodd"
+    clipRule="evenodd"
+    d="M16 2L18.9 13.1L30 16L18.9 18.9L16 30L13.1 18.9L2 16L13.1 13.1L16 2ZM16 21C18.7614 21 21 18.7614 21 16C21 13.2386 18.7614 11 16 11C13.2386 11 11 13.2386 11 16C11 18.7614 13.2386 21 16 21Z"
+    fill="url(#ninja-grad)"
+  />
+</svg>
